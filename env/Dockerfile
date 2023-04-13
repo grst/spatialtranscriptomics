@@ -9,6 +9,7 @@ RUN apt-get -y update; apt-get -y install -y --no-install-recommends \
     pandoc-citeproc \
     curl \
     gdebi-core \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # Install quarto
