@@ -15,6 +15,7 @@ jupyter: python3
 fileNameST = None
 resolution = 1
 saveFileST = None
+nameTissUUmapsPage = "st_adata_norm_TissUUmaps.html" #Name of the normalized data save file
 ```
 
 ```{python}
@@ -28,12 +29,15 @@ sc.settings.verbosity = 0
 
 ```{python}
 # Load packages
+import json
 import scanpy as sc
 import numpy as np
 import pandas as pd
 from umap import UMAP
 from matplotlib import pyplot as plt
 import seaborn as sns
+import tissuumaps
+from IPython.core.display import display, HTML
 
 sc.set_figure_params(dpi_save=300, facecolor="white")
 ```
@@ -98,6 +102,21 @@ st_adata.uns['log1p']['base'] = None
 
 ## Saving anndata file for future use.
 ```{python}
+#| code-fold: false
 if saveFileST is not None:
     st_adata.write(saveFileST)
+```
+
+```{python}
+#| echo: false
+# Create TissUUmaps html page and display link.
+state = tissuumaps.read_h5ad.h5ad_to_tmap("./", saveFileST)
+tissuumaps.views.exportToStatic(json.dumps(state), "./", "./", outputFile=nameTissUUmapsPage)
+tissuumaps.views.bundleHTMLtoOneFile(nameTissUUmapsPage)
+
+display(HTML(f"""
+    <a target="_blank" href="{nameTissUUmapsPage}">
+        Visualize AnnData file in TissUUmaps
+    </a>
+"""))
 ```

@@ -44,12 +44,17 @@ import scanpy as sc
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import scipy
 
 plt.rcParams["figure.figsize"] = (pltFigSize, pltFigSize)
 ```
 
 ```{python}
 st_adata = sc.read("./" + rawAdata)
+
+# Convert X matrix from csr to csc dense matrix for TissUUmaps export:
+st_adata.X = scipy.sparse.csc_matrix(st_adata.X)
+
 #st_adata.var_names_make_unique()
 
 mito = pd.read_csv(mitoFile, index_col=["Symbol", "MCARTA2_LIST"], delimiter="\t")["EnsemblGeneID"]
